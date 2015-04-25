@@ -1,0 +1,25 @@
+{
+  "name": "bp-router-core",
+  "version": "1.0.0",
+  "description": "A url router with parameter support",
+  "main": "Router.js",
+  "dependencies": {
+    "q": "^1.2.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BuyPro/Router-Core.git"
+  },
+  "keywords": [
+    "BuyPro",
+    "Router",
+    "Parameters"
+  ],
+  "author": "Louis Capitanchik",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BuyPro/Router-Core/issues"
+  },
+  "homepage": "https://github.com/BuyPro/Router-Core"
+}
