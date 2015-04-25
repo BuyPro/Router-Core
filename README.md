@@ -14,11 +14,9 @@ Router.js will be available through the global Router object.
 
 ### Server-Side
 
-Currently Router-Core hasn't been published to npm. This will change in the near future, and this README will be updated to reflect that.
-
-In the meantime, you should copy Router.js to the location of your third party modules, and ensure that you have q installed (by running `npm install --save q` if needs be). After that, you can simply require the module. For example:
+Router-Core can be installed via NPM by running `npm install --save bp-router-core`. After that, you can simply require the module. For example:
 ```javascript
-var Router = require("./modules/Router");
+var Router = require("bp-router-core");
 ```
 
 ## Using Router.js
@@ -57,7 +55,7 @@ Where the last two parameters are acquired from whichever server framework is be
 
 ## Full Example
 ```Javascript
-var Router = require("./modules/Router"),
+var Router = require("bp-router-core"),
     router = new Router();
 
 // Catch every request to log them
