@@ -17,11 +17,17 @@
 
     callRoute = function callRoute(func, req, res) {
         var boundNext = next.bind(func, req, res);
+        if(res.finished){
+            return boundNext();
+        }
         return func.call(func, req, res, boundNext) || boundNext();
     };
 
     callError = function callError(func, req, res, error) {
         var boundNext = next.bind(func, req, res, error);
+        if(res.finished){
+            return boundNext();
+        }
         return func.call(func, req, res, boundNext) || boundNext();
     };
 
