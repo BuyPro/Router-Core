@@ -123,7 +123,7 @@
                 throw new ReferenceError("Router has no METHOD " + method);
             } else {
                 middleware = middleware.concat(all.filter(matchRoute.bind(matchRoute, path)));
-                middleware = middleware.concat(some.filter(matchRoute.bind(matchRoute, path)));
+                middleware = middleware.push(some.filter(matchRoute.bind(matchRoute, path))[0]);
 
                 for (i = 0, len = middleware.length; i < len; i += 1) {
                     current = middleware[i];
