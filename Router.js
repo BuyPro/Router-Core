@@ -71,11 +71,11 @@
 
             self.method(method);
 
-            pathsplit = (path.charAt(0) === '/' ? path.substr(1) : path).split("/");
 
             if (typeof path === RegExp) {
                 compiledPath = {regex: path, params: []};
             } else {
+                pathsplit = (path.charAt(0) === '/' ? path.substr(1) : path).split("/");
                 compiledPath = {params: []};
                 regex = "^";
                 for (i = 0, len = pathsplit.length; i < len; i += 1) {
