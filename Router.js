@@ -9,18 +9,25 @@
         callError,
         matchRoute,
         escapeRegex,
-        paramatise;
+        paramatise,
+        promiseConstructor = q.resolve(1).constructor;
 
     next = function () {
         return arguments;
     };
 
     callRoute = function callRoute(func, req, res) {
-        var boundNext = next.bind(func, req, res);
+        var boundNext = next.bind(func, req, res),
+            val;
         if(res.finished){
             return boundNext();
         }
-        return func.call(func, req, res, boundNext) || boundNext();
+        val = func.call(func, req, res, boundNext);
+        if(val.constructor === promiseConstructor){
+            return val;
+        } else {
+            return q(boundNext());
+        }
     };
 
     callError = function callError(func, req, res, error) {
@@ -131,22 +138,14 @@
                 middleware = middleware.concat(all.filter(matchRoute.bind(matchRoute, path)));
                 middleware = middleware.concat(some.filter(matchRoute.bind(matchRoute, path)));
 
-                for (i = 0, len = middleware.length; i < len; i += 1) {
-                    current = middleware[i];
-                    if (current.error) {
-                        def.promise.catch(callError.bind(callError, current.func, req, res));
+                return middleware.reduce(function (stack, f) {
+                    if(f.error){
+                        return stack.catch(callError(callError, f.func, req, res));
                     } else {
-                        if (current.path.params.length > 0) {
-                            paramatise(path, current.path, req);
-                        } else {
-                            req.params = {};
-                        }
-                        def.promise.spread(callRoute.bind(callRoute, current.func));
+                        return stack.spread(callRoute.bind(callRoute, f.func));
                     }
-                }
+                }, q([req, res]));
             }
-            def.resolve([req, res]);
-            return def.promise;
         };
 
         this.method("ALL");
