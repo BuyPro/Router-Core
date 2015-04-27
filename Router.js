@@ -53,7 +53,7 @@
 
     Router = function () {
         var self = this;
-        this.routes = {ALL: [], GET: [], POST: []};
+        this.routes = {};
 
         this._addRoute = function _addRoute(isError, method, path, func) {
             var regex,
@@ -69,9 +69,7 @@
                 method = "ALL";
             }
 
-            if (!self.routes.hasOwnProperty(method)) {
-                self.routes[method] = [];
-            }
+            self.method(method);
 
             pathsplit = (path.charAt(0) === '/' ? path.substr(1) : path).split("/");
 
@@ -109,6 +107,7 @@
         this.method = function(method){
             if (!self.routes.hasOwnProperty(method)) {
                 self.routes[method] = [];
+                self[method.toLowerCase()] = self.use.bind(self.use, method);
             }
         };
 
@@ -143,6 +142,11 @@
             def.resolve([req, res]);
             return def.promise;
         };
+
+        this.method("ALL");
+        this.method("GET");
+        this.method("POST");
+        return this;
     };
     if (typeof module !== "undefined" && module.exports) {
         module.exports = Router;
