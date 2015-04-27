@@ -141,6 +141,7 @@
                 }
             }
             def.resolve([req, res]);
+            return def.promise;
         };
     };
     if (typeof module !== "undefined" && module.exports) {

@@ -1,6 +1,6 @@
 {
   "name": "bp-router-core",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A url router with parameter support",
   "main": "Router.js",
   "dependencies": {
