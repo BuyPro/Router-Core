@@ -143,7 +143,7 @@
                         return stack.catch(callError(callError, f.func, req, res));
                     } else {
                         if (f.path.params.length > 0) {
-                            paramatise(path, current.path, req);
+                            paramatise(path, f.path, req);
                         } else {
                             req.params = {};
                         }
