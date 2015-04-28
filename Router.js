@@ -22,7 +22,7 @@
         if(res.finished){
             return boundNext();
         }
-        val = func.call(func, req, res, boundNext);
+        val = func.call(func, req, res, boundNext) || boundNext();
         if(val.constructor === promiseConstructor){
             return val;
         } else {
@@ -31,11 +31,17 @@
     };
 
     callError = function callError(func, req, res, error) {
-        var boundNext = next.bind(func, req, res, error);
+        var boundNext = next.bind(func, req, res, error),
+            val;
         if(res.finished){
             return boundNext();
         }
-        return func.call(func, req, res, boundNext) || boundNext();
+        val = func.call(func, req, res, boundNext) || boundNext();
+        if(val.constructor === promiseConstructor){
+            return val;
+        } else {
+            return q(boundNext());
+        }
     };
 
     matchRoute = function (path, element) {
@@ -58,10 +64,11 @@
         var capture = test.regex.exec(path),
             i,
             len;
-        req.params = {};
+        req.params = req.params || {};
         for (i = 0, len = test.params.length; i < len; i += 1) {
             req.params[test.params[i]] = capture[i + 1];
         }
+        return req;
     };
 
     Router = function () {
@@ -145,7 +152,7 @@
                         if (f.path.params.length > 0) {
                             paramatise(path, f.path, req);
                         } else {
-                            req.params = {};
+                            req.params = req.params || {};
                         }
                         return stack.spread(callRoute.bind(callRoute, f.func));
                     }
