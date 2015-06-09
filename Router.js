@@ -75,6 +75,8 @@
         var self = this;
         this.routes = {};
 
+        this.cnt = 0;
+
         this._addRoute = function _addRoute(isError, method, path, func) {
             var regex,
                 i,
@@ -110,7 +112,7 @@
                 compiledPath.regex = new RegExp(regex);
             }
 
-            self.routes[method].push({path: compiledPath, func: func, error: isError});
+            self.routes[method].push({path: compiledPath, func: func, error: isError, _i: self.cnt++});
         };
 
         // Attach Middleware To Route
@@ -144,6 +146,7 @@
             } else {
                 middleware = middleware.concat(all.filter(matchRoute.bind(matchRoute, path)));
                 middleware = middleware.concat(some.filter(matchRoute.bind(matchRoute, path)));
+                middleware = middleware.sort(function(a, b){return a._i - b._i;});
 
                 return middleware.reduce(function (stack, f) {
                     if(f.error){
