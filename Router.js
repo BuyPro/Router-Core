@@ -18,16 +18,20 @@
 
     callRoute = function callRoute(func, req, res) {
         var boundNext = next.bind(func, req, res),
-            val;
+            val,
+            def = q.defer();
         if(res.finished){
-            return boundNext();
-        }
-        val = func.call(func, req, res, boundNext) || boundNext();
-        if(val.constructor === promiseConstructor){
-            return val;
-        } else {
             return q(boundNext());
         }
+        val = func.call(func, req, res, boundNext) || boundNext();
+        if(val.then && val.spread){
+            val.then(function(d) {
+                def.resolve(boundNext());
+            });
+        } else {
+            def.resolve(boundNext());
+        }
+        return def.promise;
     };
 
     callError = function callError(func, req, res, error) {
